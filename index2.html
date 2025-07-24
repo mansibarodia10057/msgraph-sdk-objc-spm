@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ArcGIS WebMap</title>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.32/"></script>
+
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+
+  <script>
+    require([
+      "esri/config",
+      "esri/views/MapView",
+      "esri/WebMap",
+      "esri/core/reactiveUtils"
+    ], (esriConfig, MapView, WebMap, reactiveUtils) => {
+
+      // Optional: Disable WebGL rendering for FeatureLayers (if you still want to test that)
+      // esriConfig.environment.featurelayerWebGL = false;
+
+      esriConfig.portalUrl = "https://imaps.mapsqa.arcgis.com/";
+
+      const webmap = new WebMap({
+        portalItem: { id: "76c6c1a23c8c4695bd7656c181c124eb" }
+      });
+
+      const mapView = new MapView({
+        container: "viewDiv",
+        map: webmap
+      });
+
+      // Optional diagnostics
+      mapView.when(() => {
+        console.log("✅ MapView is ready");
+        reactiveUtils.whenOnce(() => webmap.loadStatus === "loaded", () => {
+          console.log("✅ WebMap loaded successfully");
+        });
+      });
+    });
+  </script>
+</body>
+</html>
